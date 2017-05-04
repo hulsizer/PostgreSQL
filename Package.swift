@@ -3,5 +3,8 @@
 import PackageDescription
 
 let package = Package(
-    name: "PostgreSQL"
+    name: "PostgreSQL",
+    dependencies: [
+        .Package(url: "https://github.com/stepanhruda/libpq-darwin", majorVersion: 9)
+    ]
 )
