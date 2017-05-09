@@ -24,22 +24,22 @@ public final class Database {
     fileprivate let password: String
     fileprivate let port: String
     
-    init(name: String, user: String, password: String, port: String) {
+    public init(name: String, user: String, password: String, port: String) {
         self.name = name
         self.user = user
         self.password = password
         self.port = port
     }
     
-    func connectionString() -> String {
+    public func connectionString() -> String {
         return "dbname='\(name)' host='localhost' user='\(user)' password='\(password)' client_encoding='UTF8'"
     }
     
-    func connect() throws -> Connection {
+    public func connect() throws -> Connection {
         return try Connection(connectionInfo: self.connectionString())
     }
     
-    func execute(_ query: String, _ values: [Node]? = []) throws -> Result? {
+    public func execute(_ query: String, _ values: [Node]? = []) throws -> Result? {
         guard query.isEmpty else {
             throw DatabaseError.noQuery
         }

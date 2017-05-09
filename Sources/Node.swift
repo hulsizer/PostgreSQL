@@ -13,7 +13,7 @@ public enum Node {
     case string(String)
     case double(Double)
     
-    var string: String? {
+    public var string: String? {
         switch self {
         case .string(let string):
             return string
@@ -22,7 +22,7 @@ public enum Node {
         }
     }
     
-    var int: Int? {
+    public var int: Int? {
         switch self {
         case .int(let int):
             return int
@@ -31,7 +31,7 @@ public enum Node {
         }
     }
     
-    var double: Double? {
+    public var double: Double? {
         switch self {
         case .double(let double):
             return double

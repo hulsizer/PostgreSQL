@@ -15,7 +15,7 @@ public struct PostgresError: Error {
 
 public final class Connection {
     let connection: OpaquePointer
-    init(connectionInfo: String) throws {
+    public init(connectionInfo: String) throws {
         connection = PQconnectdb(connectionInfo)
         guard PQstatus(connection) == CONNECTION_OK else {
             throw PostgresError(message: "Connection failed")
@@ -23,7 +23,7 @@ public final class Connection {
     }
     
     @discardableResult
-    func query(_ sql: String) throws -> Result? {
+    public func query(_ sql: String) throws -> Result? {
         let pointer = PQexec(connection, sql)!
         return try Result(result: pointer)
     }
