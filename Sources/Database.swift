@@ -31,17 +31,21 @@ struct Database {
         self.port = port
     }
     
-    func connect() throws -> Connection {
-        return try Connection(connection: "dbname=\(name) host=localhost user=\(user) password=\(password) port=\(port) client_encoding='UTF8'")
+    func connectionString() -> String {
+        return "dbname='\(name)' host='localhost' user='\(user)' password='\(password)' client_encoding='UTF8'"
     }
     
-    func execute(_ query: String, _ values: [Node]? = []) throws -> [[String: Node]] {
+    func connect() throws -> Connection {
+        return try Connection(connectionInfo: self.connectionString())
+    }
+    
+    func execute(_ query: String, _ values: [Node]? = []) throws -> Result? {
         guard query.isEmpty else {
             throw DatabaseError.noQuery
         }
         
         let connection = try self.connect()
         
-        return try connection.execute(query, values)
+        return try connection.query(query)
     }
 }

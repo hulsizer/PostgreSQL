@@ -14,46 +14,21 @@ struct PostgresError: Error {
 }
 
 final class Connection {
-    
-    public let connection: OpaquePointer
-    public var isConnected: Bool {
-        if PQstatus(connection) == CONNECTION_OK {
-            return true
+    let connection: OpaquePointer
+    init(connectionInfo: String) throws {
+        connection = PQconnectdb(connectionInfo)
+        guard PQstatus(connection) == CONNECTION_OK else {
+            throw PostgresError(message: "Connection failed")
         }
-        return false
-    }
-    
-    public func getError() -> PostgresError {
-        guard let errorMessage = PQerrorMessage(connection) else {
-            return PostgresError(message: "General Error")
-        }
-        return PostgresError(message: String(cString: errorMessage))
-    }
-    
-    init(connection: String) throws {
-        self.connection = PQconnectdb(connection)
-        if !isConnected {
-            throw self.getError()
-        }
-    }
-    
-    deinit {
-        PQclear(connection)
     }
     
     @discardableResult
-    func execute(_ query: String, _ values: [Node]? = []) throws -> [[String: Node]] {
-        
-        guard !query.isEmpty else {
-            throw PostgresError(message: "Query cannot be empty")
-        }
-        
-        let pointer = PQexec(connection, query)!
-        if let result = try Result(result: pointer) {
-            return result.parse()
-        }
-        
-        return [[:]]
-        
+    func query(_ sql: String) throws -> Result? {
+        let pointer = PQexec(connection, sql)!
+        return try Result(result: pointer)
+    }
+    
+    deinit {
+        PQfinish(connection)
     }
 }

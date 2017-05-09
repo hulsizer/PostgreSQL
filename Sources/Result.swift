@@ -10,8 +10,7 @@ import Foundation
 import libpq
 
 final class Result {
-    
-    public let result: OpaquePointer
+    let result: OpaquePointer
     
     init?(result: OpaquePointer?) throws {
         switch PQresultStatus(result) {
@@ -25,30 +24,22 @@ final class Result {
         }
     }
     
+    var rowCount: Int32 {
+        return PQntuples(result)
+    }
+    
+    var columnCount: Int32 {
+        return PQnfields(result)
+    }
+    
+    subscript(row row: Int32, column column: Int32) -> String {
+        let type = PQftype(result, column)
+        let value = PQgetvalue(result, row, column)!
+        return String(cString: value) + " \(type)"
+    }
+    
     deinit {
         PQclear(result)
     }
     
-    func parse() -> [[String : Node]] {
-        
-        var parsed: [[String: Node]] = []
-        
-        let rowCount: Int32 = PQntuples(result)
-        let columnCount: Int32 = PQnfields(result)
-        
-        for row in 0..<rowCount {
-            
-            var item: [String: Node] = [:]
-            
-            for column in 0..<columnCount {
-                let name = String(cString: PQfname(result, column)!)
-                let value = PQgetvalue(result, row, column)!
-                
-                item[name] = Node.string(String(cString: value))
-                parsed.append(item)
-            }
-        }
-        
-        return parsed
-    }
 }
