@@ -9,7 +9,7 @@
 import Foundation
 import libpq
 
-final class Result {
+public final class Result {
     let result: OpaquePointer
     
     init?(result: OpaquePointer?) throws {

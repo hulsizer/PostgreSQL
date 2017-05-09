@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Node {
+public enum Node {
     case int(Int)
     case string(String)
     case double(Double)

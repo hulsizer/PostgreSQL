@@ -9,11 +9,11 @@
 import Foundation
 import libpq
 
-struct PostgresError: Error {
+public struct PostgresError: Error {
     let message: String
 }
 
-final class Connection {
+public final class Connection {
     let connection: OpaquePointer
     init(connectionInfo: String) throws {
         connection = PQconnectdb(connectionInfo)

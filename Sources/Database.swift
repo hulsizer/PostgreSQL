@@ -17,7 +17,7 @@ public enum DatabaseError: Error {
     case noResults
 }
 
-struct Database {
+public final class Database {
     
     fileprivate let name: String
     fileprivate let user: String
