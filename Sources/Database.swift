@@ -31,8 +31,8 @@ struct Database {
         self.port = port
     }
     
-    func connect() -> Connection {
-        return Connection()
+    func connect() throws -> Connection  {
+        return try Connection(name: self.name, user: self.user, password: self.password, port: self.port)
     }
     
     func execute(_ query: String, _ values: [Node]? = []) throws -> [[String: Node]] {
@@ -40,7 +40,7 @@ struct Database {
             throw DatabaseError.noQuery
         }
         
-        let connection = self.connect()
+        let connection = try self.connect()
         
         return try connection.execute(query, values)
     }

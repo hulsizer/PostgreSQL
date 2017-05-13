@@ -9,6 +9,9 @@
 import Foundation
 
 enum Node {
+    case bool(Bool)
     case int(Int)
+    case float(Float)
+    case double(Double)
     case string(String)
 }
