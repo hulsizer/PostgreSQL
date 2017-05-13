@@ -17,31 +17,35 @@ public enum DatabaseError: Error {
     case noResults
 }
 
-struct Database {
+public final class Database {
     
     fileprivate let name: String
     fileprivate let user: String
     fileprivate let password: String
     fileprivate let port: String
     
-    init(name: String, user: String, password: String, port: String) {
+    public init(name: String, user: String, password: String, port: String) {
         self.name = name
         self.user = user
         self.password = password
         self.port = port
     }
     
-    func connect() throws -> Connection  {
-        return try Connection(name: self.name, user: self.user, password: self.password, port: self.port)
+    public func connectionString() -> String {
+        return "dbname='\(name)' host='localhost' user='\(user)' password='\(password)' client_encoding='UTF8'"
     }
     
-    func execute(_ query: String, _ values: [Node]? = []) throws -> [[String: Node]] {
+    public func connect() throws -> Connection {
+        return try Connection(connectionInfo: self.connectionString())
+    }
+    
+    public func execute(_ query: String, _ values: [Node]? = []) throws -> Result? {
         guard query.isEmpty else {
             throw DatabaseError.noQuery
         }
         
         let connection = try self.connect()
         
-        return try connection.execute(query, values)
+        return try connection.query(query)
     }
 }
