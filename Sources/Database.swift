@@ -40,7 +40,7 @@ public final class Database {
     }
     
     public func execute(_ query: String, _ values: [Node]? = []) throws -> Result? {
-        guard query.isEmpty else {
+        guard !query.isEmpty else {
             throw DatabaseError.noQuery
         }
         
